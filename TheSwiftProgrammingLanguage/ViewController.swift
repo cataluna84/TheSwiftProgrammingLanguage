@@ -27,6 +27,8 @@ class ViewController: UIViewController {
         
         propertiesMain()
         
+        opaqueTypesMain()
+        
         ControlFlow.controlTransferStatement()
         
         
