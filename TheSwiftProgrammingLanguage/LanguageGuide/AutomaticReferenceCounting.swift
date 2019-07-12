@@ -9,6 +9,7 @@
 import Foundation
 
 func arcMain() {
+    
     class Person {
         let name: String
         init(name: String) {
@@ -33,17 +34,15 @@ func arcMain() {
     reference2 = nil
     reference3 = nil
     
-    // Strong Reference Cycles Between Class Instances
+    // Strong Reference Cycles Between class instances
     strongReferenceCycle()
     
-    // Resolving Strong Reference Cycles Between Class Instances
+    // MARK: Resolving Strong Reference Cycles Between Class Instances
     weakReference()
-    
     unownedReference()
-    
     unownedReferencesAndImplicitlyUnwrappedOptionalProperties()
     
-    // Strong Reference Cycles for Closures
+    // MARK: Strong Reference Cycles for Closures
     class HTMLElement {
         let name: String
         let text: String?
@@ -79,12 +78,13 @@ func arcMain() {
     
     paragraph = nil         // Creating a strong reference cycle which does'nt deinitializes the 'paragraph' object
     
-    // Resolving Strong Reference Cycles for Closures
+    // MARK: Resolving Strong Reference Cycles for Closures
     weakAndUnownedReferences()
 }
 
-
+// MARK: Strong Reference Cycles Between Class Instances
 func strongReferenceCycle() {
+    
     class Person {
         let name: String
         var apartment: Apartment?
@@ -97,6 +97,7 @@ func strongReferenceCycle() {
             print("\(name) is being deinitialized")
         }
     }
+    
     class Apartment {
         let unit: String
         var tenant: Person?
@@ -107,7 +108,6 @@ func strongReferenceCycle() {
         }
         deinit { print("Apartment \(unit) is being deinitialized") }
     }
-    
     
     var john: Person?
     var unit4A: Apartment?
@@ -123,13 +123,16 @@ func strongReferenceCycle() {
     // Both 'john' and 'unit4A' are not deinitialiased due to strong reference cycles
 }
 
+// MARK: WEAK REFERENCES
 func weakReference() {
+    
     class Person {
         let name: String
         init(name: String) { self.name = name }
         var apartment: Apartment?
         deinit { print("\(name) is being deinitialized") }
     }
+    
     class Apartment {
         let unit: String
         init(unit: String) { self.unit = unit }
@@ -152,7 +155,7 @@ func weakReference() {
     if let per = unit4A!.tenant {
         print("\(per.name) is alive")
     } else {
-        print("Person object's reference is \(unit4A!.tenant)")
+        print("Person object's reference is \(String(describing: unit4A?.tenant))")
     }
     
     unit4A = nil
@@ -160,14 +163,17 @@ func weakReference() {
 }
 
 func unownedReference() {
+    
     class Customer {
         let name: String
         var card: CreditCard?
+        
         init(name: String) {
             self.name = name
         }
         deinit { print("\(name) is being deinitialized") }
     }
+    
     class CreditCard {
         let number: UInt64
         unowned let customer: Customer
@@ -186,6 +192,7 @@ func unownedReference() {
 }
 
 func unownedReferencesAndImplicitlyUnwrappedOptionalProperties() {
+    
     class Country {
         let name: String
         var capitalCity: City!
@@ -194,6 +201,7 @@ func unownedReferencesAndImplicitlyUnwrappedOptionalProperties() {
             self.capitalCity = City(name: capitalName, country: self)
         }
     }
+    
     class City {
         let name: String
         unowned let country: Country
@@ -203,16 +211,37 @@ func unownedReferencesAndImplicitlyUnwrappedOptionalProperties() {
         }
     }
     
-    var country = Country(name: "Canada", capitalName: "Ottawa")
+    let country = Country(name: "Canada", capitalName: "Ottawa")
     print("\(country.name)'s capital city is called \(country.capitalCity.name)")
     // Prints "Canada's capital city is called Ottawa"
+}
+
+/*
+ MARK: Resolving strong reference cycle for closures
+ */
+// MARK: Defining a Capture List
+class CaptureList {
+    var delegate: AnyObject?
+    
+    init(_ delegate: AnyObject) {
+        self.delegate = delegate
+    }
+    
+    // Place the capture list before a closure parameter list and return type if they are provided:
+    lazy var someClosure: (Int, String) -> String = {
+        [unowned self, weak delegate = self.delegate!] (index: Int,
+        stringToProcess: String) -> String in
+        
+        return String("To write something here")
+    }
 }
 
 /**
  Define a capture in a closure as an unowned reference when the closure and the instance it captures will always refer to each other, and will always be deallocated at the same time.
  
  Conversely, define a capture as a weak reference when the captured reference may become nil at some point in the future. Weak references are always of an optional type, and automatically become nil when the instance they reference is deallocated. This enables you to check for their existence within the closure’s body.
- **/
+ **/    
+// MARK: Weak and Unowned References
 func weakAndUnownedReferences() {
     
     class HTMLElement {
@@ -227,10 +256,12 @@ func weakAndUnownedReferences() {
                 return "<\(self.name) />"
             }
         }
+        
         init(name: String, text: String? = nil) {
             self.name = name
             self.text = text
         }
+        
         deinit {
             print("\(name) is being deinitialized")
         }
