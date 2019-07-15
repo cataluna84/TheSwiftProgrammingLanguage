@@ -9,6 +9,7 @@ import Foundation
 
 class ControlFlow {
     
+    // MARK: For-In Loops
     func forInLoop() {
         let names = ["Anna", "Alex", "Brian", "Jack"]
         for name in names {
@@ -24,6 +25,7 @@ class ControlFlow {
             print("\(index) times 5 is \(index * 5)")
         }
         
+        // Range Operators
         let base = 3
         let power = 10
         var answer = 1
@@ -49,6 +51,7 @@ class ControlFlow {
         }
     }
     
+    // MARK: While Loops
     func whileLoop() {
         let finalSquare = 25
         var board = [Int](repeating: 0, count: finalSquare + 1)
@@ -58,6 +61,7 @@ class ControlFlow {
         
         var square = 0
         var diceRoll = 0
+        
         while square < finalSquare {
             // roll the dice
             diceRoll += 1
@@ -72,11 +76,14 @@ class ControlFlow {
         print("Game over!")
     }
     
+    // MARK: Repeat-While
     func repeatWhileLoop() {
         let finalSquare = 25
         var board = [Int](repeating: 0, count: finalSquare + 1)
+        
         board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02
         board[14] = -10; board[19] = -11; board[22] = -02; board[24] = -08
+        
         var square = 0
         var diceRoll = 0
         
@@ -89,19 +96,40 @@ class ControlFlow {
             // move by the rolled amount
             square += diceRoll
         } while square < finalSquare
-        print("Game over!")
+        
+        debugPrint("Game over!")
     }
     
+    // MARK: Conditional Statements
+    // MARK: Switch
     func switchConditionalStatement() {
+        
+        // MARK: No Implicit Fallthrough
+        /*
+         The body of each case must contain at least one executable statement. It is not valid to write the following code, because the first case is empty:
+         */
+        /*
         let anotherCharacter: Character = "a"
         switch anotherCharacter {
+        case "a": // Invalid, the case has an empty body
+        case "A":
+            print("The letter A")
+        default:
+            print("Not the letter A")
+        }
+        // This will report a compile-time error.
+         */
+
+        let anotherCharacter: Character = "a"
+        switch anotherCharacter {
+        // Example of a compound case
         case "a", "A":
             print("The letter A")
         default:
             print("Not the letter A")
         }
         
-        // Interval Matching
+        // MARK: Interval Matching
         let approximateCount = 62
         let countedThings = "moons orbiting Saturn"
         let naturalCount: String
@@ -121,7 +149,7 @@ class ControlFlow {
         }
         print("There are \(naturalCount) \(countedThings).")
 
-        // Tuples Matching
+        // MARK: Tuples Matching
         let somePoint = (1, 1)
         switch somePoint {
         case (0, 0):
@@ -136,7 +164,7 @@ class ControlFlow {
             print("\(somePoint) is outside of the box")
         }
         
-        // Value Bindings
+        // MARK: Value Bindings
         let anotherPoint = (2, 0)
         switch anotherPoint {
         case (let x, 0):
@@ -147,7 +175,7 @@ class ControlFlow {
             print("somewhere else at (\(x), \(y))")
         }
         
-        // Where Bindings
+        // MARK: Where Bindings
         let yetAnotherPoint = (1, -1)
         switch yetAnotherPoint {
         case let (x, y) where x == y:
@@ -158,8 +186,21 @@ class ControlFlow {
             print("(\(x), \(y)) is just some arbitrary point")
         }
         
-        // Compund Cases/Activities
+        // MARK: Compund Cases/Activities
+        let someCharacter: Character = "e"
+        switch someCharacter {
+        case "a", "e", "i", "o", "u":
+            print("\(someCharacter) is a vowel")
+        case "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",
+             "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z":
+            print("\(someCharacter) is a consonant")
+        default:
+            print("\(someCharacter) is not a vowel or a consonant")
+        }
+        
+        
         let stillAnotherPoint = (9, 0)
+        // Compound cases with value bindings
         switch stillAnotherPoint {
         case (let distance, 0), (0, let distance):
             print("On an axis, \(distance) from the origin")
@@ -167,8 +208,29 @@ class ControlFlow {
             print("Not on an axis")
         }
     }
-        
+    
+    // MARK: Control Transfer Statements
+    /*
+     Swift has five control transfer statements:
+        continue
+        break
+        fallthrough
+        return
+        throw
+     */
     static func controlTransferStatement() {
+        
+        // Continue statement
+        let puzzleInput = "great minds think alike"
+        var puzzleOutput = ""
+        let charactersToRemove: [Character] = ["a", "e", "i", "o", "u", " "]
+        for character in puzzleInput {
+            if charactersToRemove.contains(character) {
+                continue
+            }
+            puzzleOutput.append(character)
+        }
+        debugPrint(puzzleOutput)
             
         // Break in a switch statement
         let numberSymbol: Character = "三"  // Chinese symbol for the number 3
@@ -185,13 +247,17 @@ class ControlFlow {
         default:
             break
         }
+        // Using optional-binding to determine whether a value is found or not
         if let integerValue = possibleIntegerValue {
-            print("The integer value of \(numberSymbol) is \(integerValue).")
+            debugPrint("The integer value of \(numberSymbol) is \(integerValue).")
         } else {
-            print("An integer value could not be found for \(numberSymbol).")
+            debugPrint("An integer value could not be found for \(numberSymbol).")
         }
         
-        // Fallthrough
+        // Fallthrough statement
+        /*
+         If you need C-style fallthrough behavior, you can opt in to this behavior on a case-by-case basis with the fallthrough keyword.
+         */
         let integerToDescribe = 5
         var description = "The number \(integerToDescribe) is"
         switch integerToDescribe {
@@ -204,9 +270,9 @@ class ControlFlow {
         default:
             description += " an integer."
         }
-        print(description)
+        debugPrint(description)
         
-        // Labelled statements
+        // Labelled statement
         let finalSquare = 25
         var board = [Int](repeating: 0, count: finalSquare + 1)
         board[03] = +08; board[06] = +11; board[09] = +09; board[10] = +02
@@ -214,6 +280,9 @@ class ControlFlow {
         var square = 0
         var diceRoll = 0
         
+        /*
+         A labeled statement is indicated by placing a label on the same line as the statement’s introducer keyword, followed by a colon. Here’s an example of this syntax for a while loop, although the principle is the same for all loops and switch statements:
+         */
         gameLoop: while square != finalSquare {
             diceRoll += 1
             if diceRoll == 7 { diceRoll = 1 }
@@ -230,24 +299,28 @@ class ControlFlow {
                 square += board[square]
             }
         }
-        print("Game over!")
+        debugPrint("Game over!")
     }
     
+    // MARK: Early Exit
     func earlyExit() {
         
+        /*
+         Use a guard statement to require that a condition must be true in order for the code after the guard statement to be executed.
+         */
         func greet(person: [String: String]) {
             guard let name = person["name"] else {
                 return
             }
             
-            print("Hello \(name)!")
+            debugPrint("Hello \(name)!")
             
             guard let location = person["location"] else {
-                print("I hope the weather is nice near you.")
+                debugPrint("I hope the weather is nice near you.")
                 fatalError()
             }
             
-            print("I hope the weather is nice in \(location).")
+            debugPrint("I hope the weather is nice in \(location).")
         }
         
         greet(person: ["name": "John"])
@@ -255,6 +328,7 @@ class ControlFlow {
         greet(person: ["name": "Jane", "location": "Cupertino"])
     }
     
+    // MARK: Checking API Availability
     func checkApiAvailability() {
         // Using with guard
         guard #available(iOS 11, *) else {      // iOS, macOS, watchOS, and tvOS
@@ -281,16 +355,16 @@ class ControlFlow {
         } else {
             greeting = "Hello, nameless person"
         }
-        print(greeting)
+        debugPrint(greeting)
         
-        // Use of switch
+        // Use of switch with optionals, and where with case
         switch optionalName {
         case "prime"?:
-            print("on case prime")
+            debugPrint("on case prime")
         case let x where (x?.hasSuffix("Prime"))!:
-            print("Autobots assemble, by \(x!)")
+            debugPrint("Autobots assemble, by \(x!)")
         default:
-            print("get down")
+            debugPrint("get down")
         }
         
         // LOOPS
@@ -308,33 +382,33 @@ class ControlFlow {
                 }
             }
         }
-        print(large)
+        debugPrint(large)
         
         large = 0
         for i in 0...5 {
             large += i
-            print(large)
+            debugPrint(large)
         }
         
-        print("while loop: ")
+        debugPrint("while loop: ")
         var m = 2
         while m < 5 {
             m += 1
-            print(m)
+            debugPrint(m)
         }
         
-        print("do while loop")
+        debugPrint("do while loop")
         repeat {
             m += 2
             
         } while m<20
-        print (m)
+        debugPrint(m)
         
         // what are indices?
-        print(scores.indices)
+        debugPrint(scores.indices)
         for (index, value) in scores.enumerated() {
             scores[index] = value/2
         }
-        print("Numbers Halfed: \(scores)")
+        debugPrint("Numbers halfed: \(scores)")
     }
 }
